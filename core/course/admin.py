@@ -43,7 +43,9 @@ class CourseAdmin(admin.ModelAdmin):
     get_institutions.short_description = "Institutions"
 
     def get_instructors(self, obj):
-        return ", ".join([instructor.name for instructor in obj.instructors.all()])
+        return ", ".join(
+            [f"{instructor.first_name} {instructor.last_name}" for instructor in obj.instructors.all()]
+        )
 
     get_instructors.short_description = "Instructors"
 
