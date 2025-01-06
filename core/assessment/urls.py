@@ -1,10 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import AssessmentViewSet, QuestionViewSet, get_solution_by_question
+from .views import QuestionViewSet, get_solution_by_question
+from .views.assessment import StandAloneAssessmentViewSet, VideoAssessmentViewSet
 
 router = DefaultRouter()
-router.register(r'assessments', AssessmentViewSet)
+router.register(r'video-assessments', VideoAssessmentViewSet, basename='video-assessment')
 router.register(r'questions', QuestionViewSet)
 
 urlpatterns = [

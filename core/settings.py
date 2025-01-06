@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from drf_spectacular.utils import extend_schema
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -96,6 +98,12 @@ OAUTH2_PROVIDER = {
     'ROTATE_REFRESH_TOKEN': True,  # New refresh token on use
     'PKCE_REQUIRED': False,
 }
+
+# Set the models explicitly to avoid resolution issues
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = 'oauth2_provider.AccessToken'
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = 'oauth2_provider.RefreshToken'
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = 'oauth2_provider.IDToken'
 
 ROOT_URLCONF = 'core.urls'
 
@@ -189,13 +197,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ],
-        'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-            'core.auth.permissions.RoleBasedPermission',
-        ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.AllowAny',
-    # ],
+        # 'DEFAULT_PERMISSION_CLASSES': [
+        #     'rest_framework.permissions.IsAuthenticated',
+        #     'core.auth.permissions.RoleBasedPermission',
+        # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
 
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -206,4 +214,36 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Core API',
+    'DESCRIPTION': 'API for Core',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    'SERVE_URLCONF': 'core.urls',
+    'SCHEMA_PATH_PREFIX': 'api/v1/docs/',
+    'POSTPROCESSING_HOOKS': ['core.utils.schema.add_x_tag_groups'],
+    "TAGS": [
+        {"name": "Auth", "description": "Endpoints for authentication and user management"},
+        {"name": "Assessment", "description": "Endpoints for assessments and related operations"},
+        {"name": "Course", "description": "Endpoints for course management"},
+        {"name": "Institution", "description": "Endpoints for institution management"},
+        {"name": "User", "description": "Endpoints for user management"},
+        {"name": "Module", "description": "Endpoints for modules and related operations"},
+        {"name": "Section", "description": "Endpoints for sections and related operations"},
+        {"name": "Question","description": "Endpoints for questions and related operations"},
+        {"name": "Course Instance", "description": "Endpoints for course instances and related operations"},
+        {"name": "Video Assessment", "description": "Endpoints for video assessments and related operations"},
+        {"name": "StandAlone Assessment", "description": "Endpoints for stand alone assessments and related operations"},
+        {"name": "Solution", "description": "Endpoints for solutions and related operations"},
+
+    ],
+}
+
+
+
+
+
+
 AUTH_USER_MODEL = 'user.User'
+
+

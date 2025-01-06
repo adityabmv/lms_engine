@@ -10,9 +10,9 @@ from ..constants import COURSE_NAME_MAX_LEN, COURSE_DESCRIPTION_MAX_LEN
 
 # Visibility choices for courses
 class VisibilityChoices(models.TextChoices):
-    PUBLIC = "public", "Public"       # Publicly visible courses
-    PRIVATE = "private", "Private"   # Only visible within certain institutions
-    UNLISTED = "unlisted", "Unlisted" # Hidden courses that require a direct link
+    PUBLIC = "public", "Public"  # Publicly visible courses
+    PRIVATE = "private", "Private"  # Only visible within certain institutions
+    UNLISTED = "unlisted", "Unlisted"  # Hidden courses that require a direct link
 
 
 # Custom manager for the Course model
@@ -126,12 +126,12 @@ class Course(TimestampMixin, ModelPermissionsMixin, models.Model):
         Determines if a student has access to this course.
         """
         is_read_allowed = (
-            user.courses.filter(course=self).exists()  # Enrolled courses
-            or self.visibility == VisibilityChoices.PUBLIC
-            or (
-                self.visibility == VisibilityChoices.PRIVATE
-                and self.institutions.intersection(user.institutions).exists()
-            )  # Institution's private courses
+                user.courses.filter(course=self).exists()  # Enrolled courses
+                or self.visibility == VisibilityChoices.PUBLIC
+                or (
+                        self.visibility == VisibilityChoices.PRIVATE
+                        and self.institutions.intersection(user.institutions).exists()
+                )  # Institution's private courses
         )
         return (is_read_allowed, False, False)
 
@@ -141,12 +141,12 @@ class Course(TimestampMixin, ModelPermissionsMixin, models.Model):
         """
         is_course_instructor = self.instructors.filter(pk=user.pk).exists()
         is_read_allowed = (
-            is_course_instructor
-            or self.visibility == VisibilityChoices.PUBLIC
-            or (
-                self.visibility == VisibilityChoices.PRIVATE
-                and self.institutions.intersection(user.institutions).exists()
-            )
+                is_course_instructor
+                or self.visibility == VisibilityChoices.PUBLIC
+                or (
+                        self.visibility == VisibilityChoices.PRIVATE
+                        and self.institutions.intersection(user.institutions).exists()
+                )
         )
         return (is_read_allowed, is_course_instructor, False)
 
@@ -158,12 +158,12 @@ class Course(TimestampMixin, ModelPermissionsMixin, models.Model):
             pk=self.pk
         ).exists()
         is_read_allowed = (
-            is_course_staff
-            or self.visibility == VisibilityChoices.PUBLIC
-            or (
-                self.visibility == VisibilityChoices.PRIVATE
-                and self.institutions.intersection(user.institutions).exists()
-            )
+                is_course_staff
+                or self.visibility == VisibilityChoices.PUBLIC
+                or (
+                        self.visibility == VisibilityChoices.PRIVATE
+                        and self.institutions.intersection(user.institutions).exists()
+                )
         )
         return (is_read_allowed, False, False)
 

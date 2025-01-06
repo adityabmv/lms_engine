@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from oauth2_provider.models import (
     AccessToken,
     RefreshToken,
@@ -17,21 +18,40 @@ from core.auth.constants import DEFAULT_SCOPE
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from core.auth.serializers import LoginSerializer
+
+
+@extend_schema(
+    tags=["Auth"],
+    summary="Login",
+    description="Authenticate the user and generate OAuth1 tokens.",
+    request=LoginSerializer,
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "access_token": {"type": "string"},
+                "expires_in": {"type": "integer"},
+                "refresh_token": {"type": "string"},
+                "token_type": {"type": "string"},
+                "scope": {"type": "string"},
+            },
+        },
+        400: {"type": "object", "properties": {"error": {"type": "string"}}},
+        401: {"type": "object", "properties": {"error": {"type": "string"}}},
+        403: {"type": "object", "properties": {"error": {"type": "string"}}},
+    },
+)
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login(request):
-    email = request.data.get("email")
-    password = request.data.get("password")
-    client_id = request.data.get("client_id")
-    scope = request.data.get("scope", DEFAULT_SCOPE)
-
-    # Validate required parameters
-    if not all([email, password, client_id]):
-        return Response(
-            {"error": "Missing required parameters: email, password, client_id"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    serializer = LoginSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    email = serializer.validated_data["email"]
+    password = serializer.validated_data["password"]
+    client_id = serializer.validated_data["client_id"]
+    scope = serializer.validated_data["scope"]
 
     # Authenticate the user
     user = authenticate(request, email=email, password=password)

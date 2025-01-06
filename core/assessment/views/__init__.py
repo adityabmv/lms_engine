@@ -1,3 +1,3 @@
-from .assessment import AssessmentViewSet
+from .assessment import VideoAssessmentViewSet, StandAloneAssessmentViewSet
 from .question import QuestionViewSet
 from .solution import get_solution_by_question

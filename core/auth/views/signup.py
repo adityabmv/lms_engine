@@ -1,28 +1,38 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework import status
 from allauth.account.forms import SignupForm
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from core.auth.serializers import SignupSerializer
 
+
+@extend_schema(
+    tags=["Auth"],
+    request=SignupSerializer,
+    responses={
+        201: {"description": "User registered successfully."},
+        400: {"description": "Validation error or invalid input data."},
+    },
+    summary="Signup",
+    description="Register a new user in the system.",
+)
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def signup(request):
     """
     Register a new user.
     """
-    email = request.data.get("email")
-    password = request.data.get("password")
-    first_name = request.data.get("first_name")
-    last_name = request.data.get("last_name")
+    serializer = SignupSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
-    if not email or not password:
-        return Response(
-            {"error": "Email and password are required."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    email = serializer.validated_data["email"]
+    password = serializer.validated_data["password"]
+    first_name = serializer.validated_data["first_name"]
+    last_name = serializer.validated_data["last_name"]
 
-    # Populate additional fields if required
+    # Construct the data for the SignupForm
     data = {
         "email": email,
         "password1": password,

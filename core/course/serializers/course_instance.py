@@ -10,8 +10,8 @@ class EnrolledCourseSerializer(ModelSerializer):
 
 
 class CourseInstanceSerializer(ModelSerializer):
-    course = EnrolledCourseSerializer()
+    course_id = EnrolledCourseSerializer().data.get("id")
 
     class Meta:
         model = CourseInstance
-        fields = ["id", "course"]
+        fields = ["id", "course_id", "start_date", "end_date"]

@@ -67,3 +67,11 @@ class RoleBasedPermission(BasePermission):
             access = obj.superadmin_has_access(request.user)
 
         return access[0] if is_read else access[1] if is_write else access[2]
+
+class AllowAllAuthenticatedUsers(BasePermission):
+    """
+    Allows all authenticated users, regardless of role, to access the endpoint.
+    """
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated

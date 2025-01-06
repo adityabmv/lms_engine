@@ -39,5 +39,5 @@ class SectionDetailSerializer(serializers.ModelSerializer):
         return asdict(ItemCounts(
             videos=obj.videos.count(),
             articles=obj.articles.count(),
-            assessments=obj.assessments.count()
+            assessments=obj.standaloneassessments.count()
         ))

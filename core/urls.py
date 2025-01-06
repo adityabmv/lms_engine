@@ -1,3 +1,5 @@
+# urls.py
+
 """
 URL configuration for core project.
 

@@ -1,11 +1,59 @@
 from rest_framework import viewsets
-
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from ..serializers import CourseInstanceSerializer
 from ..models import CourseInstance
 from ...utils.helpers import get_user
 
+
+@extend_schema_view(
+    list=extend_schema(
+        tags=["Course Instance"],
+        summary="List Course Instances",
+        description="Retrieve a list of course instances accessible by the current user.",
+        responses=CourseInstanceSerializer,
+    ),
+    retrieve=extend_schema(
+        tags=["Course Instance"],
+        summary="Retrieve a Course Instance",
+        description="Retrieve detailed information for a single course instance.",
+        responses=CourseInstanceSerializer,
+    ),
+    create=extend_schema(
+        tags=["Course Instance"],
+        summary="Create a Course Instance",
+        description="Create a new course instance with the provided data.",
+        request=CourseInstanceSerializer,
+        responses=CourseInstanceSerializer,
+    ),
+    update=extend_schema(
+        tags=["Course Instance"],
+        summary="Update a Course Instance",
+        description="Update an existing course instance with new data.",
+        request=CourseInstanceSerializer,
+        responses=CourseInstanceSerializer,
+    ),
+    partial_update=extend_schema(
+        tags=["Course Instance"],
+        summary="Partially Update a Course Instance",
+        description="Update selected fields of an existing course instance.",
+        request=CourseInstanceSerializer,
+        responses=CourseInstanceSerializer,
+    ),
+    destroy=extend_schema(
+        tags=["Course Instance"],
+        summary="Delete a Course Instance",
+        description="Delete an existing course instance.",
+        responses={"204": "Course instance deleted successfully."},
+    ),
+)
 class CourseInstanceViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing course instances. Provides actions to list, retrieve, create, update, and delete course instances.
+    """
     serializer_class = CourseInstanceSerializer
 
     def get_queryset(self):
+        """
+        Retrieve the list of course instances accessible by the current user.
+        """
         return CourseInstance.objects.accessible_by(get_user(self.request.user))
