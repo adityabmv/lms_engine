@@ -1,3 +1,5 @@
+# core/assessment/models/solution_implementations.py
+
 from django.db import models
 from django.forms import ValidationError
 

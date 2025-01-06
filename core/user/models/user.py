@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
+from ... import institution
 from ...auth.permissions import ModelPermissionsMixin
 from ...utils.models import TimestampMixin
 from .. import constants as ct
@@ -30,7 +31,7 @@ class UserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # Hash the password
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -48,7 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampMixin, ModelPermissionsM
     last_name = models.CharField(max_length=ct.USER_LNAME_MAX_LEN)
     email = models.EmailField(max_length=ct.USER_EMAIL_MAX_LEN, unique=True)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)  # Required for Django Admin
+    is_staff = models.BooleanField(default=False)
+    # Use string references instead of direct model references
     courses = models.ManyToManyField(
         "course.CourseInstance", related_name="%(class)ss", through="UserCourseInstance"
     )
@@ -65,20 +67,19 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampMixin, ModelPermissionsM
     def __str__(self):
         return f"{self.first_name} {self.last_name} <{self.email}>"
 
-    def student_has_access(self, user: "User"):
+    def student_has_access(self, user):
         return (self == user, False, False)
 
-    def instructor_has_access(self, user: "User"):
+    def instructor_has_access(self, user):
         has_access = self == user
         return (has_access, has_access, False)
 
-    def staff_has_access(self, user: "User"):
+    def staff_has_access(self, user):
         return (self == user, False, False)
 
-    def moderator_has_access(self, user: "User"):
+    def moderator_has_access(self, user):
         has_access = self.institutions.intersection(user.institutions).exists()
-
         return (has_access, has_access, False)
 
-    def admin_has_access(self, user: "User"):
+    def admin_has_access(self, user):
         return (True, True, False)

@@ -2,18 +2,38 @@ from rest_framework.response import Response
 from rest_framework import status
 from oauth2_provider.views import TokenView
 from rest_framework.decorators import api_view
+from drf_spectacular.utils import extend_schema
+from rest_framework.serializers import Serializer, CharField
+
+from core.auth.serializers import RefreshTokenSerializer
 
 
+@extend_schema(
+    tags=["Auth"],
+    request=RefreshTokenSerializer,
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "access_token": {"type": "string"},
+                "expires_in": {"type": "integer"},
+                "token_type": {"type": "string"},
+                "scope": {"type": "string"},
+            },
+        },
+        400: {"type": "object", "properties": {"error": {"type": "string"}}},
+    },
+    summary="Refresh Token",
+    description="Refresh the access token using a valid refresh token.",
+)
 @api_view(["POST"])
 def refresh_token(request):
-    refresh_token = request.data.get("refresh_token")
-    client_id = request.data.get("client_id")
+    serializer = RefreshTokenSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if not refresh_token or not client_id:
-        return Response(
-            {"error": "Missing required parameters: refresh_token, client_id"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    refresh_token = serializer.validated_data["refresh_token"]
+    client_id = serializer.validated_data["client_id"]
 
     if refresh_token.user != request.user:
         return Response(

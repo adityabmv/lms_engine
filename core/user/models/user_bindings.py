@@ -1,8 +1,10 @@
 from django.db import models
 
+
 from . import User
 
 class UserInstitution(models.Model):
+    objects = None
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     institution = models.ForeignKey('institution.Institution', on_delete=models.CASCADE)
     start_date = models.DateField(null=True, blank=True)

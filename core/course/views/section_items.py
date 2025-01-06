@@ -38,3 +38,4 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         raise MethodNotAllowed("GET", detail="Listing is not allowed for this resource.")
+

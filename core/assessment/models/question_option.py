@@ -1,3 +1,5 @@
+# core/assessment/models/question_option.py
+
 from django.db import models
 
 from . import Question

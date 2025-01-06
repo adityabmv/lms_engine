@@ -1,10 +1,10 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from ..assessment.models import Assessment
+from ..assessment.models import StandAloneAssessment
 from .models import CourseAssessmentCount, Course
 
-@receiver(post_save, sender=Assessment)
+@receiver(post_save, sender=StandAloneAssessment)
 def update_assessment_count_on_save(sender, instance, created, **kwargs):
     if created:  # Only trigger when a new Assessment is created
         course = instance.section.module.course
@@ -12,7 +12,7 @@ def update_assessment_count_on_save(sender, instance, created, **kwargs):
         count_obj.count += 1
         count_obj.save()
 
-@receiver(post_delete, sender=Assessment)
+@receiver(post_delete, sender=StandAloneAssessment)
 def update_assessment_count_on_delete(sender, instance, **kwargs):
     course = instance.section.module.course
     count_obj, _ = CourseAssessmentCount.objects.get_or_create(course=course)

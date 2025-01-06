@@ -5,7 +5,7 @@ from django.db.models import Q
 from ...auth.permissions import ModelPermissionsMixin
 from ...utils.models import TimestampMixin
 from . import VisibilityChoices
-from ...user.models import User, Roles
+from ...user.models import Roles, User
 
 
 # Custom manager for CourseInstance model
@@ -133,6 +133,15 @@ class CourseInstance(TimestampMixin, ModelPermissionsMixin, models.Model):
         raise AttributeError(
             f"'{type(self).__name__}' object has no attribute '{name}'"
         )
+
+    # def has_write_permission(self, user):
+    #     """Check if user has write permission for this course instance"""
+    #     if user.role in [Roles.SUPERADMIN, Roles.ADMIN]:
+    #         return True
+    #     # elif user.role == Roles.MODERATOR:
+    #     #     return user.institutions.filter(
+    #     #         id__in=self.course.course_institutions.values_list("id", flat=True)).exists()
+    #     return False
 
     def staff_has_access(self, user: User):
         """

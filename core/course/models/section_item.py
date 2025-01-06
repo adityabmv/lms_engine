@@ -35,6 +35,23 @@ class SectionItem(TimestampMixin, ModelPermissionsMixin, models.Model):
     def __str__(self):
         return f"{self.section} - Item Sequence {self.sequence}"
 
+    @property
+    def section_item_id(self):
+        """
+        Generate a unique identifier for the SectionItem subclass.
+
+        Example:
+        - Video with ID 1 -> "V-1"
+        - Assessment with ID 2 -> "A-2"
+        """
+        prefix_map = {
+            ItemTypeChoices.VIDEO: "V",
+            ItemTypeChoices.ASSESSMENT: "A",
+            ItemTypeChoices.ARTICLE: "AR",
+        }
+        prefix = prefix_map.get(self.item_type, "UNKNOWN")
+        return f"{prefix}-{self.id}"
+
     def __getattr__(self, name):
         """
         Delegate permission checks to the related section object.

@@ -1,3 +1,5 @@
+# core/assessment/models/stand_alone_assessment.py
+
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -5,13 +7,14 @@ from ...course.models import SectionItem
 from .. import constants as ct
 
 
-class Assessment(SectionItem):
-    title = models.CharField(max_length=ct.ASSESSMENT_TITLE_MAX_LEN)
+class VideoAssessment(models.Model):
+    title = models.CharField(max_length=ct.ASSESSMENT_TITLE_MAX_LEN, help_text="Title of the assessment")
     question_visibility_limit = models.IntegerField(
         validators=[
             MinValueValidator(ct.ASSESSMENT_QUESTION_VISIBILITY_LIMIT_MIN_VAL),
             MaxValueValidator(ct.ASSESSMENT_QUESTION_VISIBILITY_LIMIT_MAX_VAL),
-        ]
+        ],
+        help_text="Number of questions visible at a time",
     )
     time_limit = models.IntegerField(
         validators=[
