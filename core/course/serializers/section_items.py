@@ -5,12 +5,11 @@ from ..models import Video, Article, Source
 
 
 class VideoSerializer(serializers.ModelSerializer):
-    section_item_id = serializers.SerializerMethodField()
     source = serializers.CharField()
 
     class Meta:
         model = Video
-        fields = ["section_item_id", "source", "transcript", "start_time", "end_time"]
+        exclude = ['created_at', 'updated_at']
 
     def validate_source(self, value):
         """
@@ -19,19 +18,11 @@ class VideoSerializer(serializers.ModelSerializer):
         source, created = Source.objects.get_or_create(url=value)
         return source
 
-    def get_section_item_id(self, obj):
-        return obj.section_item_id
-
 class ArticleSerializer(serializers.ModelSerializer):
-    section_item_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
-        fields = ["section_item_id", "content"]
-
-    def get_section_item_id(self, obj):
-        return obj.section_item_id
-
+        exclude = ['created_at', 'updated_at']
 
 
 class SectionItemSerializer(serializers.Serializer):
