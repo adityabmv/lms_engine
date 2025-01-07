@@ -3,13 +3,14 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from ...course.models import SectionItem, ItemTypeChoices
+from ...course.models import SectionItemBase, ItemTypeChoices
 from .. import constants as ct
 
 
-class Assessment(SectionItem):
-    title = models.CharField(max_length=ct.ASSESSMENT_TITLE_MAX_LEN)
+class Assessment(SectionItemBase):
     item_type = ItemTypeChoices.ASSESSMENT
+
+    title = models.CharField(max_length=ct.ASSESSMENT_TITLE_MAX_LEN)
     question_visibility_limit = models.IntegerField(
         validators=[
             MinValueValidator(ct.ASSESSMENT_QUESTION_VISIBILITY_LIMIT_MIN_VAL),

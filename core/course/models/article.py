@@ -1,15 +1,13 @@
 from django.db import models
 
-from . import SectionItem
+from . import SectionItemBase, ItemTypeChoices
 from ..constants import ARTICLE_MAX_LENGTH
 
 
-class Article(SectionItem):
-    content = models.TextField(max_length=ARTICLE_MAX_LENGTH)
+class Article(SectionItemBase):
+    item_type = ItemTypeChoices.ARTICLE
 
-    def save(self, *args, **kwargs):
-        self.item_type = 'article'
-        super().save(*args, **kwargs)
+    content = models.TextField(max_length=ARTICLE_MAX_LENGTH)
 
     def admin_has_access(self, user: "User"):
         return True, True, True
