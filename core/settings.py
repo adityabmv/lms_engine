@@ -197,23 +197,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ],
-<<<<<<< HEAD
+
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
         'core.auth.permissions.RoleBasedPermission',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.AllowAny',
-    # ],
-=======
         # 'DEFAULT_PERMISSION_CLASSES': [
         #     'rest_framework.permissions.IsAuthenticated',
         #     'core.auth.permissions.RoleBasedPermission',
         # ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
 
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',

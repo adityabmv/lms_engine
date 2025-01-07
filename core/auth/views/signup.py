@@ -6,13 +6,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
 from core.auth.serializers import SignupSerializer
-<<<<<<< HEAD
 from .forms import CustomSignupForm
 
-=======
-
-
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
 @extend_schema(
     tags=["Auth"],
     request=SignupSerializer,

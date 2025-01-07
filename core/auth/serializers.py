@@ -40,10 +40,8 @@ class SignupSerializer(Serializer):
     password = CharField(help_text="User's password", required=True)
     first_name = CharField(help_text="User's first name", required=True)
     last_name = CharField(help_text="User's last name", required=True)
-<<<<<<< HEAD
     role = CharField(help_text="User's role", required=True)
-=======
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
+
 
 class RefreshTokenSerializer(Serializer):
     refresh_token = CharField(help_text="The refresh token to generate a new access token.", required=True)

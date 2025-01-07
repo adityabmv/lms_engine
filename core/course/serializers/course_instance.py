@@ -9,7 +9,7 @@ class EnrolledCourseSerializer(ModelSerializer):
         fields = ["id", "name", "description"]
 
 
-<<<<<<< HEAD
+
 class CourseInstanceReadSerializer(ModelSerializer):
     course = EnrolledCourseSerializer()
 
@@ -46,12 +46,3 @@ class CourseInstanceWriteSerializer(ModelSerializer):
 
 
 
-
-=======
-class CourseInstanceSerializer(ModelSerializer):
-    course_id = EnrolledCourseSerializer().data.get("id")
-
-    class Meta:
-        model = CourseInstance
-        fields = ["id", "course_id", "start_date", "end_date"]
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a

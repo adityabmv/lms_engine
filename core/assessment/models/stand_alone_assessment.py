@@ -25,7 +25,3 @@ class StandAloneAssessment(SectionItem):
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a

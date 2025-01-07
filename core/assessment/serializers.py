@@ -19,11 +19,8 @@ class StandAloneAssessmentSerializer(serializers.ModelSerializer):
         model = StandAloneAssessment
         fields = "__all__"
 
-<<<<<<< HEAD
+
 class VideoAssessmentSerializer(serializers.ModelSerializer):
-=======
-class VideoAssessmentSerializer(serializers.Serializer):
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
     class Meta:
         model = VideoAssessment
         fields = "__all__"
@@ -40,11 +37,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-<<<<<<< HEAD
         exclude = ("created_at", "updated_at")
-=======
-        fields = "__all__"
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
+
     @extend_schema_field(QuestionOptionSerializer(many=True))
     def get_options(self, obj):
         if obj.type in ["MCQ", "MSQ"]:

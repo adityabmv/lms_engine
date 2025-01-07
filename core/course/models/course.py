@@ -14,15 +14,10 @@ if TYPE_CHECKING:
 
 
 class VisibilityChoices(models.TextChoices):
-<<<<<<< HEAD
-    PUBLIC = "public", "Public"
-    PRIVATE = "private", "Private"
-    UNLISTED = "unlisted", "Unlisted"
-=======
+
     PUBLIC = "public", "Public"  # Publicly visible courses
     PRIVATE = "private", "Private"  # Only visible within certain institutions
     UNLISTED = "unlisted", "Unlisted"  # Hidden courses that require a direct link
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
 
 
 class CourseManager(models.Manager):
@@ -92,20 +87,14 @@ class Course(TimestampMixin, ModelPermissionsMixin, models.Model):
 
     def student_has_access(self, user: "User"):
         is_read_allowed = (
-<<<<<<< HEAD
-                user.courses.filter(course=self).exists()
-=======
                 user.courses.filter(course=self).exists()  # Enrolled courses
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
+
                 or self.visibility == VisibilityChoices.PUBLIC
                 or (
                         self.visibility == VisibilityChoices.PRIVATE
                         and self.institutions.intersection(user.institutions).exists()
-<<<<<<< HEAD
                 )
-=======
-                )  # Institution's private courses
->>>>>>> 833a39aae9d63a4937a6431995c303e3c95b577a
+
         )
         return (is_read_allowed, False, False)
 
