@@ -236,6 +236,11 @@ SPECTACULAR_SETTINGS = {
         {"name": "Course Instance", "description": "Endpoints for course instances and related operations"},
         {"name": "Assessment", "description": "Endpoints for stand alone assessments and related operations"},
         {"name": "Solution", "description": "Endpoints for solutions and related operations"},
+        {"name": "Video", "description": "Endpoints for Video management"},
+        {"name": "Article", "description": "Endpoints for Article management"},
+        {"name": "Section Items", "description": "Endpoints for Section Items operations"},
+        {"name": "Item", "description": "Endpoints for Section Item operations"},
+        {"name": "Institution", "description": "Endpoints for Institution operations"},
     ],
 }
 

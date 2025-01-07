@@ -10,3 +10,6 @@ class Article(SectionItem):
     def save(self, *args, **kwargs):
         self.item_type = 'article'
         super().save(*args, **kwargs)
+
+    def admin_has_access(self, user: "User"):
+        return True, True, True
