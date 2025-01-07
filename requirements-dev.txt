@@ -11,3 +11,9 @@ Pillow
 django-extensions
 pydotplus
 drf-spectacular
+
+#testing
+pytest
+pytest-django
+pytest-cov
+factory-boy

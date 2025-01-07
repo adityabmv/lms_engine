@@ -241,6 +241,9 @@ SPECTACULAR_SETTINGS = {
         {"name": "Section Items", "description": "Endpoints for Section Items operations"},
         {"name": "Item", "description": "Endpoints for Section Item operations"},
         {"name": "Institution", "description": "Endpoints for Institution operations"},
+        {"name": "Users", "description": "Endpoints for User management"},
+        {"name": "User Institutions", "description": "Endpoints for User-Institution binding management"},
+        {"name": "User Courses", "description": "Endpoints for User-Course binding management"},
     ],
 }
 
