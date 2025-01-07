@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ...assessment.serializers import StandAloneAssessmentSerializer
+from ...assessment.serializers import AssessmentSerializer
 from ..models import Video, Article, Source
 
 
@@ -10,7 +10,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
-        fields = ["section_item_id", "source", "transcript", "start_time", "end_time", "assessment"]
+        fields = ["section_item_id", "source", "transcript", "start_time", "end_time"]
 
     def validate_source(self, value):
         """
@@ -40,4 +40,4 @@ class SectionItemSerializer(serializers.Serializer):
     """
     videos = VideoSerializer(many=True)
     articles = ArticleSerializer(many=True)
-    assessments = StandAloneAssessmentSerializer(many=True)
+    assessments = AssessmentSerializer(many=True)

@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from core.institution.models import Institution
 from core.course.models import Course, Module, Section
 from core.study_content.models import Video, VideoSegment, Article
-from core.assessment.models import StandAloneAssessment
+from core.assessment.models import Assessment
 from core.user.models import User
 
 class Command(BaseCommand):
@@ -100,7 +100,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f"Article '{article.title}' already exists."))
 
         # Create Assessment
-        assessment, created = StandAloneAssessment.objects.get_or_create(
+        assessment, created = Assessment.objects.get_or_create(
             title="Dummy Quiz",
             course=course,
             defaults={"type": "normal", "deadline": None},

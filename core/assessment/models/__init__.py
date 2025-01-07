@@ -1,5 +1,4 @@
-from .stand_alone_assessment import StandAloneAssessment
-from .video_assessment import VideoAssessment
+from .assessment import Assessment
 from .question import Question, QuestionType
 from .question_option import QuestionOption
 from .solution import Solution

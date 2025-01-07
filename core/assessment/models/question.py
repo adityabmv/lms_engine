@@ -17,10 +17,7 @@ class QuestionType(models.TextChoices):
 
 class Question(TimestampMixin, ModelPermissionsMixin, models.Model):
     assessment = models.ForeignKey(
-        "assessment.StandAloneAssessment", on_delete=models.CASCADE, related_name="questions", null=True, blank=True)
-    video_assessment = models.ForeignKey(
-        "assessment.VideoAssessment", on_delete=models.CASCADE, related_name="questions", null=True, blank=True
-    )
+        "assessment.Assessment", on_delete=models.CASCADE, related_name="questions")
     text = models.TextField(max_length=ct.QUESTION_TEXT_MAX_LEN, help_text="The question text.")
     hint = models.TextField(null=True, blank=True, max_length=ct.QUESTION_HINT_MAX_LEN, help_text="A hint to help the student.")
     type = models.CharField(choices=QuestionType.choices, max_length=10, help_text="The type of question.")

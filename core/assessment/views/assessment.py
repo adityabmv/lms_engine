@@ -1,104 +1,54 @@
 from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from ..models import StandAloneAssessment
-from ..models.video_assessment import VideoAssessment
-from ..serializers import StandAloneAssessmentSerializer, VideoAssessmentSerializer
+from ..models import Assessment
+from ..serializers import AssessmentSerializer
 
 
 @extend_schema_view(
     create=extend_schema(
-        tags=["StandAlone Assessment"],
-        summary="Create a StandAlone Assessment",
-        description="Create a new standalone assessment.",
-        request=StandAloneAssessmentSerializer,
-        responses=StandAloneAssessmentSerializer,
+        tags=["Assessment"],
+        summary="Create a Assessment",
+        description="Create a new Assessment.",
+        request=AssessmentSerializer,
+        responses=AssessmentSerializer,
     ),
     retrieve=extend_schema(
-        tags=["StandAlone Assessment"],
-        summary="Retrieve a StandAlone Assessment",
-        description="Retrieve details of a standalone assessment by ID.",
-        responses=StandAloneAssessmentSerializer,
+        tags=["Assessment"],
+        summary="Retrieve a Assessment",
+        description="Retrieve details of a Assessment by ID.",
+        responses=AssessmentSerializer,
     ),
     update=extend_schema(
-        tags=["StandAlone Assessment"],
-        summary="Update a StandAlone Assessment",
-        description="Update an existing standalone assessment by ID.",
-        request=StandAloneAssessmentSerializer,
-        responses=StandAloneAssessmentSerializer,
+        tags=["Assessment"],
+        summary="Update a Assessment",
+        description="Update an existing Assessment by ID.",
+        request=AssessmentSerializer,
+        responses=AssessmentSerializer,
     ),
     partial_update=extend_schema(
-        tags=["StandAlone Assessment"],
-        summary="Partially Update a StandAlone Assessment",
-        description="Partially update fields of a standalone assessment.",
-        request=StandAloneAssessmentSerializer,
-        responses=StandAloneAssessmentSerializer,
+        tags=["Assessment"],
+        summary="Partially Update a Assessment",
+        description="Partially update fields of a Assessment.",
+        request=AssessmentSerializer,
+        responses=AssessmentSerializer,
     ),
     destroy=extend_schema(
-        tags=["StandAlone Assessment"],
-        summary="Delete a StandAlone Assessment",
-        description="Delete an existing standalone assessment by ID.",
+        tags=["Assessment"],
+        summary="Delete a Assessment",
+        description="Delete an existing Assessment by ID.",
         responses={"204": "Assessment deleted successfully."},
     ),
 )
-class StandAloneAssessmentViewSet(viewsets.ModelViewSet):
+class AssessmentViewSet(viewsets.ModelViewSet):
     """
-    A ViewSet for managing StandAlone Assessments.
+    A ViewSet for managing Assessments.
     """
-    queryset = StandAloneAssessment.objects.all()
-    serializer_class = StandAloneAssessmentSerializer
+    queryset = Assessment.objects.all()
+    serializer_class = AssessmentSerializer
 
     def list(self, request, *args, **kwargs):
         """
-        Prevent listing of all standalone assessments.
-        """
-        raise MethodNotAllowed("GET", detail="Listing is not allowed for this resource.")
-
-
-@extend_schema_view(
-    create=extend_schema(
-        tags=["Video Assessment"],
-        summary="Create a Video Assessment",
-        description="Create a new video assessment.",
-        request=VideoAssessmentSerializer,
-        responses=VideoAssessmentSerializer,
-    ),
-    retrieve=extend_schema(
-        tags=["Video Assessment"],
-        summary="Retrieve a Video Assessment",
-        description="Retrieve details of a video assessment by ID.",
-        responses=VideoAssessmentSerializer,
-    ),
-    update=extend_schema(
-        tags=["Video Assessment"],
-        summary="Update a Video Assessment",
-        description="Update an existing video assessment by ID.",
-        request=VideoAssessmentSerializer,
-        responses=VideoAssessmentSerializer,
-    ),
-    partial_update=extend_schema(
-        tags=["Video Assessment"],
-        summary="Partially Update a Video Assessment",
-        description="Partially update fields of a video assessment.",
-        request=VideoAssessmentSerializer,
-        responses=VideoAssessmentSerializer,
-    ),
-    destroy=extend_schema(
-        tags=["Video Assessment"],
-        summary="Delete a Video Assessment",
-        description="Delete an existing video assessment by ID.",
-        responses={"204": "Assessment deleted successfully."},
-    ),
-)
-class VideoAssessmentViewSet(viewsets.ModelViewSet):
-    """
-    A ViewSet for managing Video Assessments.
-    """
-    queryset = VideoAssessment.objects.all()
-    serializer_class = VideoAssessmentSerializer
-
-    def list(self, request, *args, **kwargs):
-        """
-        Prevent listing of all video assessments.
+        Prevent listing of all Assessments.
         """
         raise MethodNotAllowed("GET", detail="Listing is not allowed for this resource.")

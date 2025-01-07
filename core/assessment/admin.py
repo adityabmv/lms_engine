@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import StandAloneAssessment, DescriptiveSolution, NATSolution, Question, MCQSolution, MSQSolution, QuestionOption
+from .models import Assessment, DescriptiveSolution, NATSolution, Question, MCQSolution, MSQSolution, QuestionOption
 
 class NATSolutionInline(admin.StackedInline):
     model = NATSolution
@@ -61,5 +61,5 @@ class AssessmentAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(StandAloneAssessment, AssessmentAdmin)
+admin.site.register(Assessment, AssessmentAdmin)
 admin.site.register(QuestionOption)

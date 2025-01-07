@@ -8,22 +8,17 @@ from .models import (
     DescriptiveSolution,
     MCQSolution,
     MSQSolution,
-    StandAloneAssessment,
+    Assessment,
     QuestionOption, QuestionType,
 )
-from .models.video_assessment import VideoAssessment
 
 
-class StandAloneAssessmentSerializer(serializers.ModelSerializer):
+
+class AssessmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StandAloneAssessment
-        fields = "__all__"
+        model = Assessment
+        exclude = ("created_at", "updated_at")
 
-
-class VideoAssessmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VideoAssessment
-        fields = "__all__"
 
 
 class QuestionOptionSerializer(serializers.ModelSerializer):

@@ -23,7 +23,7 @@ def add_x_tag_groups(result, generator, request, public):
         },
         {
             "name": "Assessments",
-            "tags": ["StandAlone Assessment", "Video Assessment","Question","Solution"],
+            "tags": ["Assessment", "Question", "Solution"],
         },
 
 
