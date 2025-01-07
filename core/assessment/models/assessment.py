@@ -24,5 +24,8 @@ class Assessment(SectionItem):
         help_text="Time limit in seconds",
     )
 
+    def admin_has_access(self, user: "User"):
+        return True, True, True
+
 
 
