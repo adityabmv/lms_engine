@@ -1,7 +1,7 @@
 # tests/factories/course.py
 import factory
 from factory.django import DjangoModelFactory
-from ....course.models import Course
+from core.course.models import Course
 from .user import UserFactory
 
 class CourseFactory(DjangoModelFactory):

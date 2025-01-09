@@ -1,8 +1,8 @@
 # tests/models/test_course.py
 import pytest
 from django.test import TestCase
-from ....course.models import Course, VisibilityChoices
-from ..factories import CourseFactory, UserFactory
+from core.course.models import Course, VisibilityChoices
+from core.course.tests.factories import CourseFactory, UserFactory
 
 class TestCourse(TestCase):
     def setUp(self):
@@ -21,11 +21,14 @@ class TestCourse(TestCase):
         assert write is False  # Students can't write
         assert delete is False  # Students can't delete
 
-    @pytest.mark.parametrize('visibility', [
-        VisibilityChoices.PUBLIC,
-        VisibilityChoices.PRIVATE,
-        VisibilityChoices.UNLISTED
-    ])
-    def test_course_visibility_options(self, visibility):
-        course = CourseFactory(visibility=visibility)
-        assert course.visibility == visibility
+    def test_course_visibility_options(self):
+        """Test all visibility options individually"""
+        visibilities = [
+            VisibilityChoices.PUBLIC,
+            VisibilityChoices.PRIVATE,
+            VisibilityChoices.UNLISTED
+        ]
+
+        for visibility in visibilities:
+            course = CourseFactory(visibility=visibility)
+            self.assertEqual(course.visibility, visibility)

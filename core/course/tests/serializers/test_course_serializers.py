@@ -1,7 +1,7 @@
 # tests/serializers/test_course_serializers.py
 from django.test import TestCase
-from ....course.serializers import CourseDetailSerializer
-from ..factories import CourseFactory
+from core.course.serializers import CourseDetailSerializer
+from core.course.tests.factories import CourseFactory
 
 class TestCourseSerializer(TestCase):
     def setUp(self):

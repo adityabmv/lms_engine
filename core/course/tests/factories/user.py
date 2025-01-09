@@ -1,7 +1,7 @@
 import factory
 from factory.django import DjangoModelFactory
 from django.contrib.auth import get_user_model
-from ....user.models import Roles
+from core.user.models import Roles
 
 User = get_user_model()
 
@@ -10,11 +10,10 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
         # Skip duplicate usernames by trying new ones
-        django_get_or_create = ('username',)
+        django_get_or_create = ('email',)
 
     # Basic user information
-    username = factory.Sequence(lambda n: f'testuser_{n}')
-    email = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')
+    email = factory.LazyAttribute(lambda obj: f'testuser_{obj}@example.com')
     password = factory.PostGenerationMethodCall('set_password', 'testpass123')
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')

@@ -1,7 +1,7 @@
 # tests/models/test_course_manager.py
 from django.test import TestCase
-from ....course.models import Course
-from ..factories import CourseFactory, UserFactory
+from core.course.models import Course
+from core.course.tests.factories import CourseFactory, UserFactory
 
 class TestCourseManager(TestCase):
     def setUp(self):

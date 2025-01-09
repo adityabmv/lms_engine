@@ -202,6 +202,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'core.auth.permissions.RoleBasedPermission',
     ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
         # 'DEFAULT_PERMISSION_CLASSES': [
         #     'rest_framework.permissions.IsAuthenticated',
         #     'core.auth.permissions.RoleBasedPermission',
