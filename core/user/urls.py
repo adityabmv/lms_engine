@@ -1,8 +1,13 @@
 from rest_framework.routers import DefaultRouter
 from .views import UserViewSet, UserInstitutionViewSet
+from django.urls import path, include
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'user-institutions', UserInstitutionViewSet)
 
-urlpatterns = router.urls
+# urlpatterns = router.urls
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
