@@ -2,14 +2,9 @@
 
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-
-from ...course.models import SectionItemBase, ItemTypeChoices
 from .. import constants as ct
 
-
-class Assessment(SectionItemBase):
-    item_type = ItemTypeChoices.ASSESSMENT
-
+class Assessment(models.Model):
     title = models.CharField(max_length=ct.ASSESSMENT_TITLE_MAX_LEN)
     question_visibility_limit = models.IntegerField(
         validators=[
@@ -24,6 +19,8 @@ class Assessment(SectionItemBase):
         ],
         help_text="Time limit in seconds",
     )
+    created_at = models.DateTimeField(auto_now_add=True)  # Add this field
+    updated_at = models.DateTimeField(auto_now=True)  # Add this field
 
-
-
+    def __str__(self):
+        return self.title

@@ -1,11 +1,9 @@
 from django.db import models
-
-from . import SectionItemBase, ItemTypeChoices
 from ..constants import VIDEO_TRANSCRIPT_MAX_LEN
+from ...auth.permissions import ModelPermissionsMixin
 
-class Video(SectionItemBase):
-    item_type = ItemTypeChoices.VIDEO
 
+class Video(ModelPermissionsMixin, models.Model):
     source = models.ForeignKey(
         "Source", on_delete=models.CASCADE, related_name="videos"
     )
@@ -15,6 +13,8 @@ class Video(SectionItemBase):
     )
     start_time = models.PositiveIntegerField(help_text="Start time of the video in seconds.")
     end_time = models.PositiveIntegerField(help_text="End time of the video in seconds.")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
@@ -22,6 +22,5 @@ class Video(SectionItemBase):
                 fields=["source", "start_time", "end_time"], name="unique_video_segment"
             )
         ]
-
     def admin_has_access(self, user: "User"):
         return True, True, True

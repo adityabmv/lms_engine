@@ -1,8 +1,10 @@
+from django.core import serializers
 from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from ..models import Assessment
 from ..serializers import AssessmentSerializer
+from ...course.models import Section
 
 
 @extend_schema_view(
@@ -52,3 +54,20 @@ class AssessmentViewSet(viewsets.ModelViewSet):
         Prevent listing of all Assessments.
         """
         raise MethodNotAllowed("GET", detail="Listing is not allowed for this resource.")
+    def perform_create(self, serializer):
+        """
+        Override perform_create to handle section and sequence.
+        """
+        section_id = self.request.data.get("section")
+        sequence = self.request.data.get("sequence")
+
+        if not section_id or not sequence:
+            raise serializers.ValidationError(
+                {"detail": "Both 'section' and 'sequence' are required."}
+            )
+
+        # Fetch the Section instance
+        section = Section.objects.get(id=section_id)
+
+        # Pass section and sequence to the serializer
+        serializer.save(section=section, sequence=sequence)
