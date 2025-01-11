@@ -1,5 +1,5 @@
 # core/assessment/serializers.py
-from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.utils import extend_schema_field, extend_schema_serializer
 from rest_framework import serializers
 
 from .models import (
@@ -20,7 +20,6 @@ class AssessmentSerializer(serializers.ModelSerializer):
         exclude = ("created_at", "updated_at")
 
 
-
 class QuestionOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionOption
@@ -39,7 +38,17 @@ class QuestionSerializer(serializers.ModelSerializer):
         if obj.type in ["MCQ", "MSQ"]:
             return QuestionOptionSerializer(obj.options, many=True).data
 
-
+@extend_schema_serializer(
+    examples=[
+        {
+            "value":1,
+            "tolerance_max": 0.5,
+            "tolerance_min": 0.5,
+            "decimal_precision": 2,
+            "solution_explaination":1,
+        }
+    ]
+)
 class NATSolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = NATSolution
@@ -78,18 +87,18 @@ class MSQSolutionSerializer(serializers.ModelSerializer):
         model = MSQSolution
         fields = ["choice", "solution_explanation"]
 
+
 class SolutionResponseSerializer(serializers.Serializer):
     question_type = serializers.ChoiceField(choices=[qt[0] for qt in QuestionType.choices])
     solution = serializers.SerializerMethodField()
 
     @extend_schema_field(
         {
-            "type": "object",
             "oneOf": [
-                {"$ref": "#/components/schemas/NATSolutionSerializer"},
-                {"$ref": "#/components/schemas/DescriptiveSolutionSerializer"},
-                {"$ref": "#/components/schemas/MCQSolutionSerializer"},
-                {"$ref": "#/components/schemas/MSQSolutionSerializer"},
+                {"$ref": "#/components/schemas/NATSolution"},
+                {"$ref": "#/components/schemas/DescriptiveSolution"},
+                {"$ref": "#/components/schemas/MCQSolution"},
+                {"$ref": "#/components/schemas/MSQSolution"},
             ]
         }
     )

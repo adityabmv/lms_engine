@@ -1,15 +1,11 @@
 from django.db import models
-
-from . import SectionItem
 from ..constants import ARTICLE_MAX_LENGTH
 
 
-class Article(SectionItem):
+class Article(models.Model):
     content = models.TextField(max_length=ARTICLE_MAX_LENGTH)
-
-    def save(self, *args, **kwargs):
-        self.item_type = 'article'
-        super().save(*args, **kwargs)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def admin_has_access(self, user: "User"):
         return True, True, True
