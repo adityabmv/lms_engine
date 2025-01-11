@@ -1,4 +1,5 @@
 # core/assessment/serializers.py
+from django.db import transaction
 from drf_spectacular.utils import extend_schema_field, extend_schema_serializer
 from rest_framework import serializers
 
@@ -11,13 +12,30 @@ from .models import (
     Assessment,
     QuestionOption, QuestionType,
 )
-
+from ..course.models import SectionItemInfo, SectionItemType
 
 
 class AssessmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assessment
         exclude = ("created_at", "updated_at")
+
+    def create(self, validated_data):
+        """
+        Create the Article and the associated SectionItemInfo record.
+        """
+        section = validated_data.pop('section')
+        sequence = validated_data.pop('sequence')
+
+        with transaction.atomic():
+            assessment = super().create(validated_data)
+            SectionItemInfo.create_item(
+                section=section,
+                sequence=sequence,
+                item_type=SectionItemType.ASSESSMENT,
+                item_instance=assessment,
+            )
+        return assessment
 
 
 class QuestionOptionSerializer(serializers.ModelSerializer):
