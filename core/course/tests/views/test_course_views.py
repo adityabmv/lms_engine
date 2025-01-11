@@ -19,7 +19,7 @@ class TestCourseViewSet(APITestCase):
             'name': 'New Course',
             'description': 'Course Description',
             'visibility': VisibilityChoices.PUBLIC,
-            'institutions': [self.institution.id],  # This was missing
+            'institutions': [self.institution.id], 
         }
         response = self.client.post(self.list_url, data)
         assert response.status_code == status.HTTP_201_CREATED

@@ -43,6 +43,11 @@ class CourseInstanceWriteSerializer(ModelSerializer):
             **validated_data  # Any additional fields
         )
         return course_instance_instance
+    
+    def validate(self, data):
+        if data['end_date'] <= data['start_date']:
+            raise ValidationError("End date must be after start date.")
+        return data
 
 
 

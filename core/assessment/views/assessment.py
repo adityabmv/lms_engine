@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from ..models import Assessment
 from ..serializers import AssessmentSerializer
 from ...course.models import Section
+from django.forms import ValidationError
 
 
 @extend_schema_view(
@@ -62,7 +63,7 @@ class AssessmentViewSet(viewsets.ModelViewSet):
         sequence = self.request.data.get("sequence")
 
         if not section_id or not sequence:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 {"detail": "Both 'section' and 'sequence' are required."}
             )
 
