@@ -18,6 +18,9 @@ class UserInstitution(models.Model):
     def __str__(self):
         return f"{self.user.first_name} - {self.institution.name}"
 
+    def admin_has_access(self, user):
+        return (True, True, False)
+
 
 class UserCourseInstance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

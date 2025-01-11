@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from ..serializers import CourseListSerializer, CourseDetailSerializer
 from ..models import Course
 from ...utils.helpers import get_user
@@ -53,6 +54,7 @@ from ...utils.helpers import get_user
     ),
 )
 class CourseViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     """
     ViewSet for managing courses. Provides actions to list, retrieve, create, update, and delete courses.
     """
