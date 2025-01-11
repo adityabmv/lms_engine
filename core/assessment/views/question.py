@@ -11,17 +11,11 @@ from ..serializers import QuestionSerializer
     list=extend_schema(
     tags=["Question"],
         summary="List Questions",
-        description="Retrieve a list of questions filtered by `assessment_id` or `video_assessment_id`.",
+        description="Retrieve a list of questions filtered by `assessment_id`.",
         parameters=[
             OpenApiParameter(
                 name="assessment_id",
                 description="Filter questions by StandAlone Assessment ID.",
-                required=False,
-                type=int,
-            ),
-            OpenApiParameter(
-                name="video_assessment_id",
-                description="Filter questions by Video Assessment ID.",
                 required=False,
                 type=int,
             ),
@@ -75,19 +69,15 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         """
-        Retrieve a list of questions based on `assessment_id` or `video_assessment_id`.
+        Retrieve a list of questions based on `assessment_id`.
         """
         assessment_id = self.request.query_params.get('assessment_id')  # type: ignore
-        video_assessment_id = self.request.query_params.get('video_assessment_id')  # type: ignore
 
-        if assessment_id and video_assessment_id:
-            raise NotFound("Specify either 'assessment_id' or 'video_assessment_id', not both.")
-        if not assessment_id and not video_assessment_id:
-            raise NotFound("Specify either 'assessment_id' or 'video_assessment_id'.")
+        if not assessment_id:
+            raise NotFound("'assessment_id' is required")
 
         queryset = Question.objects.filter(
             assessment_id=assessment_id if assessment_id else None,
-            video_assessment_id=video_assessment_id if video_assessment_id else None,
         )
         paginated_queryset = self.paginate_queryset(queryset)
         serializer = self.get_serializer(paginated_queryset, many=True)
