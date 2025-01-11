@@ -7,6 +7,7 @@ from . import  Question, QuestionOption, Solution
 from ..constants import MODEL_DESCRIPTIVE_SOLUTION_MAX_LEN
 
 
+
 class NATSolution(Solution):
     value = models.FloatField()
     tolerance_max = models.FloatField()

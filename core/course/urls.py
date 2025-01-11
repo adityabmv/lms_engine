@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
+from .views.section_items import SectionItemViewSet
 from ..assessment.views import AssessmentViewSet
 
 from .views import *
@@ -17,5 +18,5 @@ router.register(r'items/assessments', AssessmentViewSet, basename='assessment')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('items/', SectionItemListView.as_view(), name='section-item-list'),
+    path('items/', SectionItemViewSet.as_view(), name='section-item-list'),
 ]
