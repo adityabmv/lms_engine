@@ -22,5 +22,9 @@ class Assessment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # Add this field
     updated_at = models.DateTimeField(auto_now=True)  # Add this field
 
+
     def __str__(self):
         return self.title
+      
+    def admin_has_access(self, user: "User"):
+        return True, True, True

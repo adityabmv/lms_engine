@@ -32,6 +32,10 @@ def add_x_tag_groups(result, generator, request, public):
         {
             "name": "Institution",
             "tags": ["Institution"],
+        },
+        {
+            "name": "User",
+            "tags": ["Users", "User Institutions", "User Courses"],
         }
 
 
