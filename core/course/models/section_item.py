@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from . import Section
 
-class ItemTypeChoices(models.TextChoices):
+class SectionItemType(models.TextChoices):
     ARTICLE = "article", "Article"
     ASSESSMENT = "assessment", "Assessment"
     VIDEO = "video", "Video"
@@ -18,7 +18,7 @@ class SectionItemInfo(models.Model):
         help_text="The order of this item within the section."
     )
     item_type = models.CharField(
-        choices=ItemTypeChoices.choices,
+        choices=SectionItemType.choices,
         max_length=20,
         help_text="The type of this section item (video, article, etc.).",
     )

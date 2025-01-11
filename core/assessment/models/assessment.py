@@ -3,8 +3,10 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .. import constants as ct
+from ...auth.permissions import ModelPermissionsMixin
 
-class Assessment(models.Model):
+
+class Assessment(ModelPermissionsMixin, models.Model):
     title = models.CharField(max_length=ct.ASSESSMENT_TITLE_MAX_LEN)
     question_visibility_limit = models.IntegerField(
         validators=[

@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets, serializers
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiExample
 
-from ..models import Section, Video, Article, SectionItemInfo
+from ..models import Section, Video, Article, SectionItemInfo, SectionItemType
 
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, MethodNotAllowed
@@ -9,6 +9,10 @@ from ..models import SectionItemInfo
 from ..serializers import VideoSerializer, ArticleSerializer
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, extend_schema_view
+
+from ...assessment.models import Assessment
+from ...assessment.serializers import AssessmentSerializer
+
 
 @extend_schema_view(
 
@@ -51,15 +55,21 @@ class SectionItemViewSet(generics.ListAPIView):
         data = []
 
         for item in section_items:
-            if item.item_type == "video":
+            if item.item_type == SectionItemType.VIDEO:
                 video = Video.objects.get(id=item.item_id)
                 serializer_data = VideoSerializer(video).data
-                serializer_data["item_type"] = "video"
+                serializer_data["item_type"] = SectionItemType.VIDEO
                 serializer_data["sequence"] = item.sequence
-            elif item.item_type == "article":
+            elif item.item_type == SectionItemType.ARTICLE:
+                print(item)
                 article = Article.objects.get(id=item.item_id)
                 serializer_data = ArticleSerializer(article).data
-                serializer_data["item_type"] = "article"
+                serializer_data["item_type"] = SectionItemType.ARTICLE
+                serializer_data["sequence"] = item.sequence
+            elif item.item_type == SectionItemType.ASSESSMENT:
+                assessment = Assessment.objects.get(id=item.item_id)
+                serializer_data = AssessmentSerializer(assessment).data
+                serializer_data["item_type"] = SectionItemType.ASSESSMENT
                 serializer_data["sequence"] = item.sequence
             else:
                 serializer_data = {"detail": f"Unsupported item_type: {item.item_type}"}

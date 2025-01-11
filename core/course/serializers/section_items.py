@@ -1,6 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
-from ..models import Video, Article, Source, SectionItemInfo, Section, ItemTypeChoices
+from ..models import Video, Article, Source, SectionItemInfo, Section, SectionItemType
 from ...assessment.models import Assessment
 
 
@@ -35,7 +35,7 @@ class VideoSerializer(serializers.ModelSerializer):
             SectionItemInfo.create_item(
                 section=section,
                 sequence=sequence,
-                item_type=ItemTypeChoices.VIDEO,
+                item_type=SectionItemType.VIDEO,
                 item_instance=video,
             )
 
@@ -59,7 +59,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             SectionItemInfo.create_item(
                 section=section,
                 sequence=sequence,
-                item_type=ItemTypeChoices.ARTICLE,
+                item_type=SectionItemType.ARTICLE,
                 item_instance=article,
             )
         return article
