@@ -44,9 +44,12 @@ def signup(request):
 
     form = CustomSignupForm(data)
     if form.is_valid():
-        form.save(request)
+        user = form.save(request)
         return Response(
-            {"message": "User registered successfully."}, status=status.HTTP_201_CREATED
+            {
+                "message": "User registered successfully.",
+                "id": user.id,
+             }, status=status.HTTP_201_CREATED
         )
 
     return Response({"errors": form.errors}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,6 +1,7 @@
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
-
+from core.auth.permissions import ModelPermissionsMixin
 from . import User
 
 class UserInstitution(models.Model):
@@ -22,7 +23,7 @@ class UserInstitution(models.Model):
         return (True, True, False)
 
 
-class UserCourseInstance(models.Model):
+class UserCourseInstance(ModelPermissionsMixin, models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey('course.CourseInstance', on_delete=models.CASCADE)
 
