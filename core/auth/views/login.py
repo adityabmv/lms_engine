@@ -115,6 +115,7 @@ def login(request):
             "refresh_token": refresh_token.token,
             "token_type": "Bearer",
             "scope": access_token.scope,
+            "user_id": grant.user.id,
         },
         status=status.HTTP_200_OK,
     )
