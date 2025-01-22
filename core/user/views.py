@@ -185,6 +185,7 @@ class UserCoursesViewSet(viewsets.ModelViewSet):
 
         # Send the POST request
         url = "http://localhost:3000/v1/course-progress/initialize-progress"
+
         try:
             response = requests.post(url, json=payload)
             print("Successfully sent!")
