@@ -15,7 +15,7 @@ class CourseInstanceReadSerializer(ModelSerializer):
 
     class Meta:
         model = CourseInstance
-        fields = ["id", "course", "start_date", "end_date"]
+        fields = "__all__"
 
 class CourseInstanceWriteSerializer(ModelSerializer):
     course_id = PrimaryKeyRelatedField(
@@ -24,30 +24,28 @@ class CourseInstanceWriteSerializer(ModelSerializer):
 
     class Meta:
         model = CourseInstance
-        fields = ["course_id", "start_date", "end_date"]
+        fields = ["id","course_id", "start_date", "end_date"]
 
     def create(self, validated_data):
-        # Extract start_date and end_date from validated_data
-        start_date = validated_data.pop("start_date", None)
-        end_date = validated_data.pop("end_date", None)
-        course_id = validated_data.pop("course_id", None)
-
-        if not start_date or not end_date:
-            raise ValidationError("start_date and end_date are required.")
+        # Extract data
+        course_id = validated_data.pop("course_id")
+        start_date = validated_data.pop("start_date")
+        end_date = validated_data.pop("end_date")
 
         # Create the CourseInstance object
-        course_instance_instance = CourseInstance.objects.create(
+        course_instance = CourseInstance.objects.create(
             course=course_id,
             start_date=start_date,
             end_date=end_date,
-            **validated_data  # Any additional fields
+            **validated_data
         )
-        return course_instance_instance
-    
+
+        # Return the created instance
+        return course_instance
+
     def validate(self, data):
-        if data['end_date'] <= data['start_date']:
+        if data["end_date"] <= data["start_date"]:
             raise ValidationError("End date must be after start date.")
         return data
-
 
 

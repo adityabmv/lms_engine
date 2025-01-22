@@ -1,5 +1,8 @@
+import requests
 from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema, extend_schema_view
+
+from core.course.models import Course
 from .models import User, UserInstitution, UserCourseInstance
 from .serializers import UserSerializer, UserInstitutionSerializer, UserCoursesSerializer
 
@@ -140,3 +143,52 @@ class UserInstitutionViewSet(viewsets.ModelViewSet):
 class UserCoursesViewSet(viewsets.ModelViewSet):
     queryset = UserCourseInstance.objects.all()
     serializer_class = UserCoursesSerializer
+
+    def perform_create(self, serializer):
+        # Save the course-user relationship
+        instance = serializer.save()
+
+        # Fetch course details for the payload
+        course = instance.course
+        course = Course.objects.get(id=course.id)
+
+        modules = course.modules.all()
+
+        # Construct `modules` part of the payload
+        modules_payload = []
+        for module in modules:
+            sections_payload = []
+            for section in module.sections.all():
+                items_payload = []
+                for item in section.section_item_info.all():
+                    items_payload.append({
+                        "sectionItemId": item.prefixed_item_id,
+                        "sequence": item.sequence,
+                    })
+                sections_payload.append({
+                    "sectionId": f"{section.id}",
+                    "sequence": section.sequence,
+                    "sectionItems": items_payload,
+                })
+            modules_payload.append({
+                "moduleId": f"{module.id}",
+                "sequence": module.sequence,
+                "sections": sections_payload,
+            })
+
+        # Prepare the full payload
+        payload = {
+            "courseInstanceId": str(course.id),
+            "studentIds": [str(instance.user.id)],
+            "modules": modules_payload,
+        }
+
+        # Send the POST request
+        url = "http://localhost:3000/v1/course-progress/initialize-progress"
+        try:
+            response = requests.post(url, json=payload)
+            print("Successfully sent!")
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            # Handle request exceptions if needed
+            raise Exception(f"Error sending course initialization: {e}")

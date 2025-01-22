@@ -199,15 +199,15 @@ REST_FRAMEWORK = {
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ],
 
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.AllowAny'
+    # ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
         'core.auth.permissions.RoleBasedPermission',
     ],
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-        # 'DEFAULT_PERMISSION_CLASSES': [
-        #     'rest_framework.permissions.IsAuthenticated',
-        #     'core.auth.permissions.RoleBasedPermission',
-        # ],
 
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',

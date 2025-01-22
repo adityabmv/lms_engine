@@ -6,3 +6,4 @@ django-allauth
 django-oauth-toolkit
 django-cors-headers
 Pillow
+django-environ

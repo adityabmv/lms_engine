@@ -194,7 +194,7 @@ class QuestionSerializer(serializers.ModelSerializer):
                     current_option = QuestionOption.objects.create(question=question, **option)
                     created_option_id.append(current_option.id)
 
-            if nat_solution:
+            if nat_solution is not None:
                 NATSolution.objects.create(question=question, **nat_solution)
 
             if descriptive_solution:
@@ -202,7 +202,7 @@ class QuestionSerializer(serializers.ModelSerializer):
                     question=question, **descriptive_solution
                 )
 
-            if solution_option_index:
+            if solution_option_index is not None:
                 choice = QuestionOption.objects.get(id=created_option_id[solution_option_index])
                 MCQSolution.objects.create(question=question, choice=choice)
 

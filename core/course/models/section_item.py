@@ -35,6 +35,16 @@ class SectionItemInfo(models.Model):
     def __str__(self):
         return f"{self.section} - Item Sequence {self.sequence}"
 
+    @property
+    def prefixed_item_id(self):
+        prefix_map = {
+            SectionItemType.VIDEO: "v",
+            SectionItemType.ASSESSMENT: "a",
+            SectionItemType.ARTICLE: "ar",
+        }
+        prefix = prefix_map.get(self.item_type, "")
+        return f"{prefix}{self.item_id}"
+
     @staticmethod
     def create_item(section, sequence, item_type, item_instance):
         """
