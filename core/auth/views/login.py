@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema
+import requests
 from oauth2_provider.models import (
     AccessToken,
     RefreshToken,
@@ -74,6 +75,37 @@ def login(request):
         return Response(
             {"error": "Invalid client_id"}, status=status.HTTP_400_BAD_REQUEST
         )
+    
+    existing_access_token = AccessToken.objects.filter(
+        user=user, 
+        expires__gt=now(), 
+        application=application  # Add application check
+    ).order_by('-expires').first()
+
+    if existing_access_token:
+        print(f"Existing Access token: {existing_access_token.token}")
+        # User is already logged in, make a PUT request to update their login status
+        payload = {
+            "access_token": existing_access_token.token,
+            "expires_in": (existing_access_token.expires - now()).seconds,
+        }
+        url = f"http://192.168.98.54:3000/auth/{user.id}"  # Assuming user ID is part of the PUT request URL
+
+        try:
+            response = requests.put(url, json=payload)
+            print("Successfully updated login details!")
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Error updating login details: {e}")
+
+        return Response(
+            {
+                "access_token": existing_access_token.token,
+                "expires_in": (existing_access_token.expires - now()).seconds,
+                # "scope": existing_access_token.scope,
+            },
+            status=status.HTTP_200_OK,
+        )
 
     # Revoke existing tokens for the user
     AccessToken.objects.filter(user=user).delete()
@@ -107,6 +139,23 @@ def login(request):
     )
 
     grant.delete()
+    print(access_token)
+
+    payload = {
+        "user_id": grant.user.id,
+        "access_token": access_token.token,
+        "expires_in": oauth2_settings.ACCESS_TOKEN_EXPIRE_SECONDS,
+    }
+    
+    url = "http://192.168.98.54:3000/auth"
+
+    try:
+        response = requests.post(url, json=payload)
+        print("Successfully sent login details!")
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        # Handle request exceptions if needed
+        raise Exception(f"Error sending login details: {e}")
 
     return Response(
         {

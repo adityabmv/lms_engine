@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from oauth2_provider.models import AccessToken, RefreshToken
 from rest_framework.decorators import api_view, permission_classes
+import requests
 
 from core.auth.permissions import AllowAllAuthenticatedUsers
 from core.auth.serializers import LogoutSerializer
@@ -21,6 +22,7 @@ from core.user.models import Roles, User
     description="Revoke the user's access token and logout the user.",
 )
 @api_view(["POST"])
+@permission_classes([AllowAllAuthenticatedUsers])
 def logout(request):
     """
     Revoke the user's access token.
@@ -30,6 +32,7 @@ def logout(request):
 
     token = serializer.validated_data.get("token")
     user: User = request.user
+    print("LALLALALALALAALL")
 
     try:
         # Fetch the AccessToken object
@@ -41,6 +44,16 @@ def logout(request):
             if access_token.user.role == Roles.STUDENT and user.role in [Roles.SUPERADMIN, Roles.ADMIN, Roles.MODERATOR]:
                 RefreshToken.objects.filter(access_token=access_token).delete()
                 access_token.delete()
+
+                try:
+                    url = f"http://192.168.98.54:3000/auth/{access_token.user.id}"
+                    response = requests.delete(url)
+                    response.raise_for_status()
+                    print("Successfully logged out on external server.")
+                except requests.exceptions.RequestException as e:
+                    print(f"Error in DELETE request: {e}")
+
+
                 return Response(
                     {"message": "Student Logged out successfully."}, status=status.HTTP_200_OK
                 )
@@ -51,8 +64,17 @@ def logout(request):
             )
 
         # Delete the RefreshToken and AccessToken
+        print("YAHAN ERROR HAI")
         RefreshToken.objects.filter(access_token=access_token).delete()
         access_token.delete()
+
+        try:
+            url = f"http://192.168.98.54:3000/auth/{user.id}"
+            response = requests.delete(url)
+            response.raise_for_status()
+            print("Successfully logged out on external server.")
+        except requests.exceptions.RequestException as e:
+            print(f"Error in DELETE request: {e}")
 
         return Response(
             {"message": "Logged out successfully."}, status=status.HTTP_200_OK
