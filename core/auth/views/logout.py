@@ -9,6 +9,7 @@ import requests
 from core.auth.permissions import AllowAllAuthenticatedUsers
 from core.auth.serializers import LogoutSerializer
 from core.user.models import Roles, User
+from core.hardcodes import ae_url
 
 
 @extend_schema(
@@ -46,7 +47,7 @@ def logout(request):
                 access_token.delete()
 
                 try:
-                    url = f"http://192.168.98.54:3000/auth/{access_token.user.id}"
+                    url = f"{ae_url}auth/{access_token.user.id}"
                     response = requests.delete(url)
                     response.raise_for_status()
                     print("Successfully logged out on external server.")
@@ -69,7 +70,7 @@ def logout(request):
         access_token.delete()
 
         try:
-            url = f"http://192.168.98.54:3000/auth/{user.id}"
+            url = f"{ae_url}auth/{user.id}"
             response = requests.delete(url)
             response.raise_for_status()
             print("Successfully logged out on external server.")

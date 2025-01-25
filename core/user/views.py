@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from core.course.models import Course
 from .models import User, UserInstitution, UserCourseInstance
 from .serializers import UserSerializer, UserInstitutionSerializer, UserCoursesSerializer
+from core.hardcodes import ae_url
 
 
 @extend_schema_view(
@@ -184,7 +185,7 @@ class UserCoursesViewSet(viewsets.ModelViewSet):
         }
 
         # Send the POST request
-        url = "http://localhost:3000/v1/course-progress/initialize-progress"
+        url = f"{ae_url}v1/course-progress/initialize-progress"
 
         try:
             response = requests.post(url, json=payload)

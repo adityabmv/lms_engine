@@ -20,6 +20,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
 from core.auth.serializers import LoginSerializer
+from core.hardcodes import ae_url
 
 
 @extend_schema(
@@ -89,7 +90,7 @@ def login(request):
             "access_token": existing_access_token.token,
             "expires_in": (existing_access_token.expires - now()).seconds,
         }
-        url = f"http://192.168.98.54:3000/auth/{user.id}"  # Assuming user ID is part of the PUT request URL
+        url = f"{ae_url}auth/{user.id}"  # Assuming user ID is part of the PUT request URL
 
         try:
             response = requests.put(url, json=payload)
@@ -147,7 +148,7 @@ def login(request):
         "expires_in": oauth2_settings.ACCESS_TOKEN_EXPIRE_SECONDS,
     }
     
-    url = "http://192.168.98.54:3000/auth"
+    url = f"{ae_url}auth"
 
     try:
         response = requests.post(url, json=payload)
