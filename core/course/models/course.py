@@ -1,4 +1,4 @@
-# course/models/course.py
+# core/course/models/course.py
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -38,7 +38,7 @@ class CourseManager(models.Manager):
                     institutions__id__in=user_institutions,
                     visibility=VisibilityChoices.PRIVATE,
                 )
-                | Q(instructors__contains=user)
+                | Q(instructors=user)
             )
 
         elif user.role == Roles.STAFF:
@@ -49,8 +49,7 @@ class CourseManager(models.Manager):
                     institutions__id__in=user_institutions,
                     visibility=VisibilityChoices.PRIVATE,
                 )
-            ).union(
-                user.personnel_courses.all()  # type: ignore
+                | Q(id__in=user.personnel_courses.values_list('id', flat=True))
             )
 
         elif user.role == Roles.STUDENT:
@@ -61,7 +60,14 @@ class CourseManager(models.Manager):
                     institutions__id__in=user_institutions,
                     visibility=VisibilityChoices.PRIVATE,
                 )
-            ).union(user.courses.all())
+                | Q(id__in=user.courses.values_list('id', flat=True))
+            )
+
+    def accessible_by_id(self, user: "User", course_id: int):
+        """
+        Check if a specific course is accessible by the user
+        """
+        return self.accessible_by(user).filter(id=course_id).first()
 
 
 class Course(TimestampMixin, ModelPermissionsMixin, models.Model):

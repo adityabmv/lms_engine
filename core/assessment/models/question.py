@@ -34,12 +34,26 @@ class Question(TimestampMixin, ModelPermissionsMixin, models.Model):
     def __getattr__(self, name):
         """
         Delegate permission checks to the related assessment object.
+        Handles permission method lookups that are not directly defined on the Question model.
         """
-        if name.endswith("_has_access"):
+        # List of permission methods to delegate to the assessment
+        permission_methods = [
+            'student_has_access', 
+            'instructor_has_access', 
+            'staff_has_access', 
+            'moderator_has_access', 
+            'admin_has_access', 
+            'superadmin_has_access'
+        ]
+
+        if name in permission_methods:
+            # Delegate the permission check to the associated assessment
             return getattr(self.assessment, name)
+        
+        # If it's not a known permission method, raise the standard AttributeError
         raise AttributeError(
             f"'{type(self).__name__}' object has no attribute '{name}'"
         )
 
-    def admin_has_access(self, user: "User"):
-        return True, True, True
+    # def admin_has_access(self, user: "User"):
+    #     return True, True, True

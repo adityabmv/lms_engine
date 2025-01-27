@@ -42,7 +42,9 @@ class CustomSignupForm(BaseSignupForm):
     )
 
     ROLE_CHOICES = (
-        ('user', 'User'),
+        ('staff', 'Staff'),
+        ('instructor', 'Instructor'),
+        ('moderator', 'Moderator'),
         ('admin', 'Admin'),
         ('student', 'Student'),
         ('superadmin', 'Super Admin')

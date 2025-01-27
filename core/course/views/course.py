@@ -1,3 +1,5 @@
+# core/course/views/course.py
+
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from ..serializers import CourseListSerializer, CourseDetailSerializer
@@ -55,20 +57,20 @@ from ...utils.helpers import get_user
 )
 class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    """
-    ViewSet for managing courses. Provides actions to list, retrieve, create, update, and delete courses.
-    """
 
     def get_queryset(self):
-        """
-        Retrieve the list of courses accessible by the current user.
-        """
+        if self.action == 'retrieve':
+            # For single course retrieval, use the new method
+            course = Course.objects.accessible_by_id(
+                get_user(self.request.user), 
+                self.kwargs.get('pk')
+            )
+            return Course.objects.filter(id=course.id) if course else Course.objects.none()
+        
+        # For list and other actions, use the existing method
         return Course.objects.accessible_by(get_user(self.request.user))
 
     def get_serializer_class(self):
-        """
-        Dynamically choose the serializer class based on the action.
-        """
         if self.action in ["list", "retrieve"]:
             return CourseDetailSerializer if self.action == "retrieve" else CourseListSerializer
         return CourseDetailSerializer

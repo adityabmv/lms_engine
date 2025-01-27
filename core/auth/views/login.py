@@ -1,3 +1,5 @@
+# core/auth/views/login.py:
+
 from drf_spectacular.utils import extend_schema
 import requests
 from oauth2_provider.models import (
@@ -84,33 +86,18 @@ def login(request):
     ).order_by('-expires').first()
 
     if existing_access_token:
-        print(f"Existing Access token: {existing_access_token.token}")
-        # User is already logged in, make a PUT request to update their login status
-        payload = {
-            "access_token": existing_access_token.token,
-            "expires_in": (existing_access_token.expires - now()).seconds,
-        }
-        url = f"{ae_url}auth/{user.id}"  # Assuming user ID is part of the PUT request URL
 
+        RefreshToken.objects.filter(access_token=existing_access_token).delete()
+        existing_access_token.delete()
+
+        # Optionally notify an external server of the logout
         try:
-            response = requests.put(url, json=payload)
-            print("Successfully updated login details!")
+            url = f"{ae_url}auth/{user.id}"  # Assuming user ID is part of the DELETE request
+            response = requests.delete(url)
             response.raise_for_status()
+            print("Successfully logged out on external server.")
         except requests.exceptions.RequestException as e:
-            raise Exception(f"Error updating login details: {e}")
-
-        return Response(
-            {
-                "access_token": existing_access_token.token,
-                "expires_in": (existing_access_token.expires - now()).seconds,
-                # "scope": existing_access_token.scope,
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    # Revoke existing tokens for the user
-    AccessToken.objects.filter(user=user).delete()
-    RefreshToken.objects.filter(user=user).delete()
+            print(f"Error during logout notification: {e}")
 
     # Generate an authorization code
     authorization_code = secrets.token_urlsafe(32)
@@ -140,22 +127,21 @@ def login(request):
     )
 
     grant.delete()
-    print(access_token)
 
     payload = {
         "user_id": grant.user.id,
         "access_token": access_token.token,
         "expires_in": oauth2_settings.ACCESS_TOKEN_EXPIRE_SECONDS,
     }
-    
-    url = f"{ae_url}auth"
 
+    # Make a POST request to the external server with the new access token
+    url = f"{ae_url}auth"
     try:
         response = requests.post(url, json=payload)
-        print("Successfully sent login details!")
         response.raise_for_status()
+        print("Successfully updated login details on external server!")
     except requests.exceptions.RequestException as e:
-        # Handle request exceptions if needed
+        print(f"Error during login update: {e}")
         raise Exception(f"Error sending login details: {e}")
 
     return Response(

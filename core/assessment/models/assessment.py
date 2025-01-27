@@ -28,5 +28,5 @@ class Assessment(ModelPermissionsMixin, models.Model):
     def __str__(self):
         return self.title
       
-    def admin_has_access(self, user: "User"):
-        return True, True, True
+    # def admin_has_access(self, user: "User"):
+    #     return True, True, True

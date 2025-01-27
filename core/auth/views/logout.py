@@ -1,3 +1,5 @@
+# core/auth/views/logout.py:
+
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
